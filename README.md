@@ -1,2 +1,2 @@
-# TCL_VMD_SCRIPTS
-A few useful vmd trajectory analysis scripts 
+# TCL_VMD_scripts
+Some of useful tcl scripts to analyse data from VMD
