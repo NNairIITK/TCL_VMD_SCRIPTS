@@ -1,0 +1,342 @@
+
+TCL VMD SCRIPT TO ANALYSE TRAJECTORY and Can be UTILIZED as CUSTAMIZED COMMANDS in VMD
+
+ VERSION  : analysis_script_V 1.0
+
+ Authour  :  ANJI BABU KAPAKAYLA
+             IIT KANPUR, INDIA.
+             ( anjibabu480@gmail.com)
+
+ Step 1    :  SOURCE analysis.tcl in VMD Tk  console
+ Step 2    :  Command_name {Arguments}
+
+
+ After Sourcing analysis.tcl script in VMD console, type following
+    my_commands show     : List out all available commands from this script.
+    --help command_name  : Shows the details of command ,with examples.
+ 
+================================================================================================
+TIP OF THE DAY  :
+
+     Keep this analysis.tcl script in a adirectory called vmd_tcl_scripts/
+     Mention its path in vmd startup file ~/.vmdrc
+         
+        eg.   source /home/anjibabu/vmd_tcl_scripts/analysis.tcl
+         
+      That's it, here after when ever you open VMD automatically analysis.tcl will be excecuted.
+      So, U can start using these commands as default commands.
+=================================================================================================
+             
+  Following analysis can be done by using this script :
+
+  Alignment                
+  RMSD
+  Distance btw two atoms
+  Measure  Angle
+  Measure Dihedral
+  Contact map
+  clustering
+  sasa : solvent accessible surface area 
+  Print  Interactions within given cutoff
+  Print No. of waters within given cutoff
+  Print No. of HBonds within given cutoff
+  Print residue names and resid for given sel 
+  Molecule details ( No of frames, No of atoms, No of waters, Box size )
+  On pbc_box and off Pbc_box and prints box size
+  save_pdb
+  save_image   : Renders image using Tachyon
+  save_movie   : creates a movie for given frames (gif file) other formats will be updated soon.
+  save_coordinates
+  --help       : which gives details of command
+  my_commands show : shows avalilable commands
+
+====================================================
+  Future updates:
+  save_view    : saves the visivilization of current vmd 
+  Ramachandran plot
+  HB plot
+  PBC Wrapping
+  measure Solvent Accessble Surface Area (SASA)
+  Radial distribution function [g(r)]
+  Radius of gyration
+  Histogram (Probability Distribution )
+  delete_frame : Deletes the frames for given intial and final frames
+#====================================================
+
+AVAILABLE COMMANDS AND DETAILS :
+======================
+
+1. Command Name  : my_commands show
+   PURPOSE       : Shows all available commands written in this script
+   USAGE&example : my_commands show
+   Here you have to use "show" as fixed argument to see commands list.
+
+
+2.Command name   : --help
+   PURPOSE       : Prints the details of any mentioned command
+   USAGE         : --help command_name
+   EXAMPLE       : --help distance
+   EXAMPLE 2     : --help angle
+   Prints the details of commands distance and angle.
+
+
+3.Command Name   : save_pdb 
+  PURPOSE        : Writes pdb file for given options
+  USAGE          : save_pdb {atomselection} {start_frame} {end_frame} {stride} {molid} {filename}
+  EXAMPLE        : save_pdb "protein" 5 100 5 top file.pdb
+  It will write file.pdb for "protein" from frame 5 to 100 by skipping every 5 frames.
+
+
+4.Command Name   : align
+  PURPOSE        : To align two molecule for given molids 
+  USAGE          : align {molid1} {molid2}
+  EXAMPLE        : align top 1
+
+
+5.Command Name   : rmsd
+  PURPOSE        : Measures Avg.RMSD & std for given selections & molecules.
+  USAGE          : rmsd "sel" "molid1"  "molid2"
+  EXAMPLE        : rmsd "backbone" 0 1
+  EXAMPLE1       : rmsd "protein" top top
+  OUTPUT         : Generates data into a file "RMSD.dat".
+  (IF both the molids are same , RMSD will be calculated by taking zeroth frame as reference)
+
+
+6. Command Name  : distance
+   PURPOSE       : Measures Avg Distance & std  and Distribution for any given 2 atoms
+   USAGE         : distance sel1 sel2
+   EXAMPLE       : distance "serial 3418" "serial 3415"
+   OUTPUT        : Generates data into a file "DISTANCE.dat and Distribution of data stores into HISTOGRAM.dat" 
+
+
+7. Command Name  : angle
+   PURPOSE       : Measures Avg. angle & std  for any given 3 atoms
+   USAGE         : angle "sel1" "sel2" "sel3"
+   EXAMPLE       : angle "serial 3418" "serial 3415" "serial 3395"
+   OUTPUT        : Generates data into file " ANGLE.dat ".
+
+
+8. Command Name  : dihedral
+   PURPOSE       : Measures Avg Dihedral angle & std  for any given 4 atoms 
+   USAGE         : dihedral sel1 sel2 sel3 sel4
+   EXAMPLE       : dihedral "serial 3418" "serial 3415" "serial 3412" "serial 3395"
+   EXAMPLE       : dihedral "index 3417" "index 3414" "index 3411" "index 3394"
+   OUTPUT        : Generates data into a file " DIHEDRAL.dat ".
+
+
+9. Command Name  : show_residues
+   PURPOSE       : Prints RESID and corresponding RESNAME for given selection and for given frames
+   USAGE         : show_residues sel molid <initial frame>  <final frame>  
+   EXAMPLE       : show_residues "resid 170 to 180" top 0 5
+   EXAMPLE1      : show_residues "(not resname WAT) and within 3 of resid 235" 0 5 10
+   EXAMPLE2      : show_residues "protein and hydrophobic " top 1 0
+   EXAMPLE3      : show_residues "protein and basic" top 
+    " In Example3 frame numbers are optional ,
+      if you omits frame numbers it prints all basic residues from zeroth frame"
+   OUTPUT        : Generates data into a file  "RESNAMES.dat ".
+
+
+10.Command Name  : details
+   PURPOSE       : Prints required molecular details for given molid
+   USAGE         : details molid
+   EXAMPLE       : details 1
+   EXAMPLE1      : details top
+
+
+ 11.Command Name : count_waters
+    PURPOSE      : Prints Avg. No of waters of entire trajectory or for selcted frames
+                   which are present around given selection
+    USAGE        : count_waters "sel" molid start_frame end_frame
+    EXAMPLE      : count_waters "within 5 of resid 235" 0 5 10
+    OUTPUT       : Generates data into a file "NO-OF-WATERS.dat".
+
+
+12.Command Name  : pbc_box
+   PURPOSE       : Sets BOX ON or OFF or shows the size of PBC BOX 
+   USAGE         : pbc_box {choice} 
+   ARGUMENTS     : on, off, size 
+   EXAMPLE       : pbc_box on
+   ( It will ON the pbc box for current top molecule)
+   EXAMPLE1      : pbc_box off 
+   ( It will off the PBC box )
+   EXAMPLE2      : pbc_box size 
+   ( It  prints the size of BOX (values) on Tk console)
+
+
+13.Command Name  : show_interactions
+   PURPOSE       : Prints Interactions between given two selections within given DISTANCE cutoff
+   USAGE         : show_interactions sel1 sel2 cutoff <start frame> <end frame> 
+   EXAMPLE       : show_interactions "protein" "resid 143" 3.0 5 10
+   (It prints all interactions within cutoff of 3.0 (A) between protein and resid 143 of all atoms )
+    OUTPUT FORMAT:indexA residA resnameA(typeA)---indexB residB resnameB(typeB) :  Distance
+   ARGUMENTS     :
+      sel1       : Any given  atom selction
+      sel2       : Any given atom selction
+      cutoff     : distance cutoff
+      start frame: Starting frame , from here start analysing
+      end frame  : Final framme , It stops here
+   OUTPUT        : Stores all the information in "INTERACTIONS.dat" file
+
+
+14.Command Name  : contact_map
+   PURPOSE       :  Measures all the contacts between given two selections and
+                    Prints 1 (one) if contact is below cutoff , 0 (zero) otherwise
+   USAGE         : contact_map " sel1"  "sel2"  cutoff startframe endframe
+   Example       : contact_map "resid 1 to 50 and name CA" "resid 51 to 100 and name CA" 6.0 0 10
+   OUTPUT        : Stores all data in "CONTACT_MAP.dat" file.
+   OUTPUT FORMAT : RESID_A  RESID_B 1/0 DISTANCE
+   
+   PLOTTING DATA : gnuplot >>  splot "CONTACT_MAP.dat" u 1:2:3 w p notitle 
+                   gnuplot >>  set view 0,0,1
+                   gnuplot >>  replot
+   It generates a beautiful CONTACT MAP 3D image.
+
+
+15.Command Name   : count_hbonds
+   PURPOSE        : Prints AVG No. of HBonds b/w given DONOR and ACCEPTOR selections
+                     and given distance_cutoff & angle_cutoff .
+   USAGE          : count_hbonds "Donor_sel1"  "Acceptor_sel2"  distance_cutoff angle_cutoff
+   EXAMPLE        : count_hbonds "protein and name N" "protein and name O" 3.0 30
+   OUTPUT         : Stores data in file "HBONDS_COUNT.dat".
+   (Which contains Frame vs No.of Hbonds ,You can plot this data as Frames v/s No. of Hbonds)
+   NOTE           : It assumes that molis as "top" or zero. It prints AVG HBONDS per FRAME.
+
+
+16.Command Name   : show_hbonds
+   PURPOSE        : Prints the all HBonds b/w given DONOR & ACCEPTOR selections for
+                    given distance & angle cutoff.
+   USAGE          : show_hbonds  "D_sel1" "A_sel2" dist_cutoff angle_cutoff <startframe> <endframe> 
+   EXAMPLE        : show_hbonds "protein and name N" "protein and name O" 3.0 30 5 10
+   OUTPUT         : Stores all HBONDS data in HBONDS.dat.
+   OUTPUT FORMAT  : indexD residD resnameD(type)-- indexA residA resnameA(type)-- Distance
+   (Prints and Stores data for every Frame ) 
+   NOTE           : Always Atomselctons should be DONOR and ACCEPTOR , (not ACCEPTOR and DONOR)
+
+
+ 17.Command Name  :  HB_occupancy
+    PURPOSE       :  Prints only the HBONDS occupancy for given selctions for selected frames
+    USAGE         :  HB_occupancy "D_sel1" "A_sel2" dist_cutoff angle_cutoff <startframe> <endframe>
+    EXAMPLE       :  HB_occupancy "protein" "resid 147" 3.0 30 0 20
+    OUTPUT FORMAT :  RESID_D  RESNAME_D --  RESID_A  RESNAME_A    ---OCUPANCY (%)
+    EXAMPLE       :  140  LYS -- 147 ARG  --- 80.00 %   (Pints for all selected frames) 
+    ARGUMENTS     :
+     SELECTION1   : MUST BE ANY DONOR SELECTION
+     SELECTION2   : MUST BE ANY ACCEPTOR SELECTION
+     CUTOFF       : Distance cutoff to measure HBonds
+     ANGLEE_CUTOFF: Angle cutoff to measure HBonds
+     START_FRAME  : Starting Frame Number
+     END_FRAME    : End Frame Number
+
+
+18.Command Name   : save_image
+   PURPOSE        : Renders a high quality image using Tachyon for currently active frame.
+   UASAGE         : save_image {molid} filename
+   EXAMPLE        : save_image top my_image
+   ( extension of file not required )
+   OUTPUT FILES   : filename.dat , filename.dat.tga, filename.dat.jpg
+   Above example produces my_image.dat , my_image.dat.tga, & my_image.dat.jpg.
+   
+   
+ 19.Command Name  : save_movie
+    PURPOSE       : GENERATES A MOVIE IN  GIF FORMAT FOR GIVEN MOLID & FOR SELECTED FRAMES
+    USAGE         : save_movie molid filename <start frame> <end frame> 
+   (no extension of filename is required ) 
+    EXAMPLE1      : save_movie top my_protein 0 20
+    EXAMPLE2      : save_movie 1 drug_protein 20 40
+    EXAMPLE3      : save_movie top my_protein
+    EXAMPLE4      : save_movie 1 drug_protein 30
+    OUTPUT        : Example1 Genarates "my_protein.gif" file from zeroth frame to 20th frame.
+                  : Example2 generates "drug_protien.gif" file from 20th frame to 40th frame.
+                  : Example3 generates "my_protein.gif" file from zeroth frame to end frame .
+                  : Example4 generates "drug_protein.gif" file from 30th frame to end frame.
+                 
+                  
+         NOTE : Other Movie formats will be updated soon.
+    
+    
+  20.Command Name : save_coordinates
+     PURPOSE      : Saves coordinates for given arguments
+     USAGE        : save_coordinates "Sel" {molid} {filename} {filetype} {start_frame} {end_frame} {stride}
+     EXAMPLE      : save_coordinates "protein" top my_protien.mol2 mol2 5 30 5  
+    
+     ARGUMENTS    :
+     AtomselectioN: Any given slection
+     Start frame  : From which frame to save coordinates
+     End frame    : To which frame to save coordinates
+     Stride       : After how many frames you want save (skipping)"
+     molid        : Which molecule you want save
+     Filename     : Filename with extension
+     EXAMPLE      : protein.mol2, protein.xyz, protein.gro, protein.dcd.....etc.
+     Filetype     : Which format you want to save.
+     
+     Available Filetypes  : ABINIT , bgf, binpos, crd, crdbox, dcd, gro, trr, js, lammpstrj, mol2,
+                            namdbin, pdb, pqr, rst7,POSCAR, xbgf, xyz, dtr, m"ae, dms, hoomd .
+         
+   21.Command Name : sasa    
+      PURPOSE      : Measures Solvent Accessible Surface Area (SASA) 
+      USAGE        : sasa 'SELCTION'
+      EXAMPLE      : sasa 'resid 170 to 180' 
+      OUTPUT       : SASA.dat
+   
+   22.Command Name : clustering
+      PURPOSE      : To do cluster analysis.
+      USAGE        : clustering {Atomselection} {rmsd_cutoff} {step size} {frame_args}
+      Arguments    : 
+      Atomselect   : Any atom selection 
+      rmsd_cutoff  : RMSD cutoff 
+      Step_size    : STEP SIZE ( nothing but skip)
+      frame_args   : Initial & final frame numbers 
+      Default Arguments :
+      Dist_func : Distance Function is set to rmsd as default.
+      num       : No. of Clusters are fixed to default vaule 3
+      EXAMPLES  :
+      EXAMPLE1  : clustering '(protein) and backbone' 1.0 2 
+      EXAMPLE2  : clustering '(protein) and backbone' 1.0 2 5
+      EXAMPLE3  : clustering '(protein) and backbone' 1.0 2 5 25
+
+      Example1, measures the clusters of given selections with rmsd cutoff 1.0 and 
+                step size 2 for zeroth frame to final frame in trajectory.
+                
+      Example2, measures the clusters of given selections with rmsd cutoff 1.0 and 
+                step size 2 from frame 5 to final frame in trajectory.
+                
+      Example3, measures the clusters of given selections with rmsd cutoff 1.0 and 
+                step size 2 from frame 5 to frame 25 in trajectory.
+
+    (At present No. of clusters are fixed to 3) 
+     Default Distance function is rmsd. but you can change to fitrmsd or rgyd or rmsd.
+      
+      OUTPUT FILES : Generates 4 files 
+       CLUSTER-A.xyz
+       CLUSTER-B.xyz
+       CLUSTER-C.xyz
+       UNCLUSTER.xyz
+      
+        
+         
+         
+         
+         
+         #================================================================================#
+         #                                                                                #
+         #                       WRITTEN BY ANJI BABU KAPAKAYALA                          #
+         #                    INDIAN INSTITUTE OF TECHNOLOGY,KANPUR.                      #
+         #                            (anjibabu480@gmail.com)                             #
+         #                                                                                #  
+         #================================================================================#
+                  
+            
+            
+            
+            
+       $$    " yad bhavam tad bhavati "    means     "you become whatever you think"   $$
+                  
+                                                                     ----from vedas
+                  
+
+
+
+
+
+
+
