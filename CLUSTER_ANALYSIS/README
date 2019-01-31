@@ -1,23 +1,24 @@
 
- TCL VMD SCRIPT TO DO CLUSTER ANALYSIS
+ ##TCL VMD SCRIPT TO DO CLUSTER ANALYSIS
 
- Authour : ANJI BABU KAPAKYALA
-            IIT KANPUR, INDIA.
-          (anjibabu480@gmail.com)
+ 	   Authour : ANJI BABU KAPAKYALA
+ 	             C/o Prof. Nisanth N. Nair,
+                     IIT KANPUR, INDIA.
+                     (anjibabu480@gmail.com)
 
- PURPOSE : To do cluster analysis
- USAGE   : source clustering.tcl in VMD Tk console.
-         : clustering {Atomselection} {rmsd_cutoff} {step size} {frame_args}
+         PURPOSE : To do cluster analysis
+         USAGE   : source clustering.tcl in VMD Tk console.
+                 : clustering {Atomselection} {rmsd_cutoff} {step size} {frame_args}
 
- Arguments   :
- Atomselect  : Any atom selection
- rmsd_cutoff : RMSD cutoff
- Step_size   : STEP SIZE ( nothing but skip)
- frame_args  : Initial & final frame numbers
+        Arguments   :
+         Atomselect  : Any atom selection
+         rmsd_cutoff : RMSD cutoff
+         Step_size   : STEP SIZE ( nothing but skip)
+         frame_args  : Initial & final frame numbers
  
- Default Arguments :
- Dist_func         : Distance Function is set to rmsd as default.
- num               : No. of Clusters are fixed to default vaule 3
+       Default Arguments :
+        Dist_func         : Distance Function is set to rmsd as default.
+        num               : No. of Clusters are fixed to default vaule 3
 
  EXAMPLES :
  EXAMPLE1 : clustering "(protein) and backbone" 1.0 2
@@ -103,14 +104,7 @@ EXAMPLE OUTPUT of this code looks like this. ( on Tk console)
 
 CHEERS ....!!!!!!
 
-
-#=================================================================================#												 #
-#                        WRITTEN BY ANJI BABU KAPAKAYALA        	    	  # 
-#=================================================================================#
-
-
-
-date  :27/07/2017
+date  :30/01/2019
 place : kanpur,INDIA.
 
 
