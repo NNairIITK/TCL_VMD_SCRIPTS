@@ -1,3 +1,4 @@
+# This script is adopted from Prof. Ricardo Mancera's Group, Curti University.
 # Pretty handy script to calculate and update the secondary structure for a protein across a loaded trajectory.
 # To use, load this script in the TK Console and then type "start_sscache". Simples.
 
